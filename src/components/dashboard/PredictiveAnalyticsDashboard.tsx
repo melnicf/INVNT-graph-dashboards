@@ -389,10 +389,13 @@ function KeyInputsTooltip({ inputs }: { inputs: string[] }) {
 }
 
 export function PredictiveAnalyticsDashboard() {
+  const [openTooltip, setOpenTooltip] = useState<string | null>(null);
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       {chartConfigs.map((config, index) => {
         const score = predictiveAnalyticsData[config.key as keyof typeof predictiveAnalyticsData];
+        const isOpen = openTooltip === config.key;
         
         return (
           <ChartCard
@@ -400,10 +403,15 @@ export function PredictiveAnalyticsDashboard() {
             title={config.title}
             subtitle={config.subtitle}
             headerActions={
-              <Tooltip>
+              <Tooltip
+                open={isOpen}
+                onOpenChange={(open) => setOpenTooltip(open ? config.key : null)}
+                delayDuration={0}
+              >
                 <TooltipTrigger asChild>
                   <button
                     type="button"
+                    onClick={() => setOpenTooltip((prev) => (prev === config.key ? null : config.key))}
                     className="inline-flex items-center justify-center w-11 h-11 min-w-[44px] min-h-[44px] rounded-full text-[var(--foreground-muted)] hover:text-[var(--foreground)] hover:bg-[var(--background-tertiary)] active:bg-[var(--background-tertiary)] transition-colors cursor-help touch-manipulation"
                     aria-label="Key inputs"
                   >

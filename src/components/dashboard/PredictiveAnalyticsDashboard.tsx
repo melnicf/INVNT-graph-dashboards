@@ -1,6 +1,11 @@
 'use client';
 
-import { ChartCard } from '@/components/ui';
+import {
+  ChartCard,
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from '@/components/ui';
 import { predictiveAnalyticsData } from '@/lib/mock-data';
 import { useState, useEffect } from 'react';
 
@@ -11,6 +16,15 @@ const chartConfigs = [
     subtitle: 'Day, date, weather conditions',
     color: 'var(--chart-purple)',
     type: 'semicircle' as const,
+    keyInputs: [
+      'Historical weather',
+      'Traffic',
+      'Uber and Taxi availability',
+      'Competing events',
+      'Holidays',
+      'Historical attendance',
+      'CO2 emissions',
+    ],
   },
   {
     key: 'locationSuitability',
@@ -18,6 +32,13 @@ const chartConfigs = [
     subtitle: 'Accessibility, flow, cost',
     color: 'var(--chart-violet)',
     type: 'ring' as const,
+    keyInputs: [
+      'Travel cost data',
+      'Hotel & lodging data',
+      'Venue capacity & room layouts',
+      'Local context (city events)',
+      'Historical congestion patterns and traffic',
+    ],
   },
   {
     key: 'contentAlignment',
@@ -25,6 +46,13 @@ const chartConfigs = [
     subtitle: 'Interest vs sessions match',
     color: 'var(--chart-indigo)',
     type: 'progress' as const,
+    keyInputs: [
+      'Behavioral intent (goals, interests, preferred tracks)',
+      'Industry trends',
+      'LinkedIn and social data',
+      'Sessions (topics, tracks, formats, breakouts)',
+      'Historical engagement by topic type',
+    ],
   },
   {
     key: 'economicSentiment',
@@ -32,6 +60,13 @@ const chartConfigs = [
     subtitle: 'Financial optimism level',
     color: 'var(--chart-blue)',
     type: 'bars' as const,
+    keyInputs: [
+      'Macro-economic indicators',
+      'Industry-specific economic signals',
+      'Merger and acquisition activity',
+      'Market volatility',
+      'Attendee industry & seniority mix',
+    ],
   },
   {
     key: 'attendanceReliability',
@@ -39,6 +74,14 @@ const chartConfigs = [
     subtitle: 'No-show risk level',
     color: 'var(--chart-cyan)',
     type: 'semicircle' as const,
+    keyInputs: [
+      'Registration timing & channel',
+      'Ticket types',
+      'Travel distances',
+      'Historical no-show patterns',
+      'Day-to-day drop-off patterns',
+      'Programming balance per day',
+    ],
   },
   {
     key: 'networkDensity',
@@ -46,6 +89,12 @@ const chartConfigs = [
     subtitle: 'Connection probability',
     color: 'var(--chart-teal)',
     type: 'ring' as const,
+    keyInputs: [
+      'Declared networking intent',
+      'Attendee role, seniority, industry mix',
+      'Session formats (breakouts vs keynotes)',
+      'Spatial layout (zones, expo density)',
+    ],
   },
   {
     key: 'operationalStrain',
@@ -53,6 +102,13 @@ const chartConfigs = [
     subtitle: 'Experience breakdown risk',
     color: 'var(--chart-emerald)',
     type: 'progress' as const,
+    keyInputs: [
+      'Capacity vs forecast attendance',
+      'Historical ops issues',
+      'Queue & movement simulations',
+      'Timing overlays',
+      'Speaking time and presentation time',
+    ],
   },
   {
     key: 'brandStorytelling',
@@ -60,6 +116,12 @@ const chartConfigs = [
     subtitle: 'Narrative impact score',
     color: 'var(--chart-pink)',
     type: 'bars' as const,
+    keyInputs: [
+      'Creative and content against audience intent',
+      'Staging and event design',
+      'Presentation format and length',
+      'Presentation time and impact',
+    ],
   },
 ];
 
@@ -308,6 +370,24 @@ function getScoreLabel(score: number): string {
   return 'Needs Attention';
 }
 
+function KeyInputsTooltip({ inputs }: { inputs: string[] }) {
+  return (
+    <div className="max-w-[calc(100vw-2rem)] min-w-[12rem]">
+      <div className="text-xs font-semibold text-[var(--foreground-muted)] mb-1.5 uppercase tracking-wider">
+        Key inputs
+      </div>
+      <ul className="text-xs text-[var(--foreground)] space-y-1">
+        {inputs.map((input, i) => (
+          <li key={i} className="flex items-start gap-2">
+            <span className="text-[var(--foreground-muted)] mt-0.5">•</span>
+            <span>{input}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 export function PredictiveAnalyticsDashboard() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -319,7 +399,36 @@ export function PredictiveAnalyticsDashboard() {
             key={config.key}
             title={config.title}
             subtitle={config.subtitle}
-            className="animate-fade-in"
+            headerActions={
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    type="button"
+                    className="inline-flex items-center justify-center w-5 h-5 rounded-full text-[var(--foreground-muted)] hover:text-[var(--foreground)] hover:bg-[var(--background-tertiary)] transition-colors cursor-help"
+                    aria-label="Key inputs"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="w-3.5 h-3.5"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="M12 16v-4" />
+                      <path d="M12 8h.01" />
+                    </svg>
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="top" className="max-w-[min(24rem,calc(100vw-2rem))]">
+                  <KeyInputsTooltip inputs={config.keyInputs} />
+                </TooltipContent>
+              </Tooltip>
+            }
+            className="animate-fade-in w-full"
             style={{ animationDelay: `${index * 0.08}s` } as React.CSSProperties}
           >
             <div className="flex flex-col items-center pt-2 pb-1">

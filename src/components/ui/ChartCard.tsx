@@ -9,6 +9,7 @@ interface ChartCardProps {
   unit?: string;
   trend?: 'up' | 'down' | 'neutral';
   trendValue?: string;
+  headerActions?: ReactNode;
   children?: ReactNode;
   className?: string;
   loading?: boolean;
@@ -22,6 +23,7 @@ export function ChartCard({
   unit,
   trend,
   trendValue,
+  headerActions,
   children,
   className = '',
   loading = false,
@@ -72,7 +74,7 @@ export function ChartCard({
       }}
     >
       {/* Header */}
-      <div className="flex items-start justify-between mb-3">
+      <div className="flex items-start justify-between mb-3 gap-2">
         <div className="flex-1 min-w-0">
           <h3 className="text-sm font-medium text-[var(--foreground)] leading-tight truncate">
             {title}
@@ -83,20 +85,23 @@ export function ChartCard({
             </p>
           )}
         </div>
-        
-        {/* Value Badge */}
-        {value !== undefined && (
-          <div className="flex items-baseline gap-1 ml-3 flex-shrink-0">
-            <span className="text-xl font-semibold text-[var(--foreground)] tabular-nums">
-              {value}
-            </span>
-            {unit && (
-              <span className="text-xs text-[var(--foreground-muted)]">
-                {unit}
+
+        <div className="flex items-center gap-1 flex-shrink-0">
+          {headerActions}
+          {/* Value Badge */}
+          {value !== undefined && (
+            <div className="flex items-baseline gap-1">
+              <span className="text-xl font-semibold text-[var(--foreground)] tabular-nums">
+                {value}
               </span>
-            )}
-          </div>
-        )}
+              {unit && (
+                <span className="text-xs text-[var(--foreground-muted)]">
+                  {unit}
+                </span>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Trend Indicator */}

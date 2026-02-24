@@ -8,4 +8,10 @@ export { MetricCard } from './MetricCard';
 export { RadialProgress } from './RadialProgress';
 export { Sparkline, TrendIndicator } from './Sparkline';
 export { HeatMapGrid } from './HeatMapGrid';
-export { Tooltip, FloatingTooltip } from './Tooltip';
+export {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+  TooltipPortal,
+} from './Tooltip';

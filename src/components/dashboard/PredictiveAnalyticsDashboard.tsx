@@ -7,7 +7,7 @@ import {
   TooltipContent,
 } from '@/components/ui';
 import { predictiveAnalyticsData } from '@/lib/mock-data';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const chartConfigs = [
   {
@@ -390,6 +390,7 @@ function KeyInputsTooltip({ inputs }: { inputs: string[] }) {
 
 export function PredictiveAnalyticsDashboard() {
   const [openTooltip, setOpenTooltip] = useState<string | null>(null);
+  const touchHandledRef = useRef(false);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -411,7 +412,20 @@ export function PredictiveAnalyticsDashboard() {
                 <TooltipTrigger asChild>
                   <button
                     type="button"
-                    onClick={() => setOpenTooltip((prev) => (prev === config.key ? null : config.key))}
+                    onPointerDown={(e) => {
+                      if (e.pointerType === 'touch') {
+                        e.preventDefault();
+                        touchHandledRef.current = true;
+                        setOpenTooltip((prev) => (prev === config.key ? null : config.key));
+                      }
+                    }}
+                    onClick={() => {
+                      if (touchHandledRef.current) {
+                        touchHandledRef.current = false;
+                        return;
+                      }
+                      setOpenTooltip((prev) => (prev === config.key ? null : config.key));
+                    }}
                     className="inline-flex items-center justify-center w-11 h-11 min-w-[44px] min-h-[44px] rounded-full text-[var(--foreground-muted)] hover:text-[var(--foreground)] hover:bg-[var(--background-tertiary)] active:bg-[var(--background-tertiary)] transition-colors cursor-help touch-manipulation"
                     aria-label="Key inputs"
                   >

@@ -404,7 +404,7 @@ export function PredictiveAnalyticsDashboard() {
                 <TooltipTrigger asChild>
                   <button
                     type="button"
-                    className="inline-flex items-center justify-center w-5 h-5 rounded-full text-[var(--foreground-muted)] hover:text-[var(--foreground)] hover:bg-[var(--background-tertiary)] transition-colors cursor-help"
+                    className="inline-flex items-center justify-center w-11 h-11 min-w-[44px] min-h-[44px] rounded-full text-[var(--foreground-muted)] hover:text-[var(--foreground)] hover:bg-[var(--background-tertiary)] active:bg-[var(--background-tertiary)] transition-colors cursor-help touch-manipulation"
                     aria-label="Key inputs"
                   >
                     <svg
@@ -415,7 +415,7 @@ export function PredictiveAnalyticsDashboard() {
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      className="w-3.5 h-3.5"
+                      className="w-5 h-5"
                     >
                       <circle cx="12" cy="12" r="10" />
                       <path d="M12 16v-4" />

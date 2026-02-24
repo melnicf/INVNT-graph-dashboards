@@ -34,7 +34,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       {/* Background gradient */}
       <div
         className="fixed inset-0 pointer-events-none"
@@ -54,7 +54,7 @@ export default function Home() {
       />
 
       {/* Main Content */}
-      <main className="relative container mx-auto px-6 py-8">
+      <main className="relative container mx-auto px-4 sm:px-6 py-8 max-w-full overflow-x-hidden">
         <DashboardHeader config={activeConfig} />
 
         {/* Dashboard Grid */}
@@ -64,7 +64,7 @@ export default function Home() {
 
         {/* Footer info */}
         <footer className="mt-12 pt-8 border-t border-(--border-secondary)">
-          <div className="flex items-center justify-between text-xs text-(--foreground-muted)">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs text-(--foreground-muted)">
             <div className="flex items-center gap-4">
               <span>Real-time data pipeline: Kafka</span>
               <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />

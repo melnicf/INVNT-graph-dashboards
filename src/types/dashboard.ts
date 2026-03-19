@@ -29,10 +29,8 @@ export interface PredictiveAnalyticsData {
   temporalFavorability: number;
   locationSuitability: number;
   contentAlignment: number;
-  economicSentiment: number;
   attendanceReliability: number;
   networkDensity: number;
-  operationalStrain: number;
   brandStorytelling: number;
 }
 
@@ -63,6 +61,7 @@ export interface DashboardConfig {
   shortName: string;
   description: string;
   chartCount: number;
+  badge?: string;
 }
 
 export const dashboardConfigs: DashboardConfig[] = [
@@ -71,20 +70,21 @@ export const dashboardConfigs: DashboardConfig[] = [
     name: 'Predictive Analytics',
     shortName: 'Predictive',
     description: 'Pre-event forecasting and risk assessment',
-    chartCount: 8,
+    chartCount: 6,
   },
   {
     id: 'production',
-    name: 'Production',
-    shortName: 'Production',
+    name: 'Live',
+    shortName: 'Live',
     description: 'Real-time event monitoring (40" TV setup)',
     chartCount: 8,
   },
   {
     id: 'client',
-    name: 'Client View',
-    shortName: 'Client',
+    name: 'Post Insights',
+    shortName: 'Post Insights',
     description: 'Mobile-optimized client metrics',
     chartCount: 5,
+    badge: 'coming',
   },
 ];

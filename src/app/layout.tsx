@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import { TooltipProvider } from "@/components/ui";
+import { SessionProvider } from "@/components/providers/SessionProvider";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -16,8 +17,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "INVNT Analytics | Event Intelligence Dashboards",
-  description: "Predictive analytics and real-time insights for event management",
+  title: "INVNT Event Intelligence Engine",
+  description: "Predictive analytics, real-time monitoring, and post-event insights for world-class events",
 };
 
 export default function RootLayout({
@@ -30,7 +31,9 @@ export default function RootLayout({
       <body
         className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} antialiased bg-[var(--background)] text-[var(--foreground)]`}
       >
-        <TooltipProvider delayDuration={300}>{children}</TooltipProvider>
+        <SessionProvider>
+          <TooltipProvider delayDuration={300}>{children}</TooltipProvider>
+        </SessionProvider>
       </body>
     </html>
   );

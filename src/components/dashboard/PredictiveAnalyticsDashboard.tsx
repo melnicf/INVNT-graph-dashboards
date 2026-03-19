@@ -55,20 +55,6 @@ const chartConfigs = [
     ],
   },
   {
-    key: 'economicSentiment',
-    title: 'Economic Sentiment & Spend',
-    subtitle: 'Financial optimism level',
-    color: 'var(--chart-blue)',
-    type: 'bars' as const,
-    keyInputs: [
-      'Macro-economic indicators',
-      'Industry-specific economic signals',
-      'Merger and acquisition activity',
-      'Market volatility',
-      'Attendee industry & seniority mix',
-    ],
-  },
-  {
     key: 'attendanceReliability',
     title: 'Attendance Reliability',
     subtitle: 'No-show risk level',
@@ -94,20 +80,6 @@ const chartConfigs = [
       'Attendee role, seniority, industry mix',
       'Session formats (breakouts vs keynotes)',
       'Spatial layout (zones, expo density)',
-    ],
-  },
-  {
-    key: 'operationalStrain',
-    title: 'Operational Strain & Risk',
-    subtitle: 'Experience breakdown risk',
-    color: 'var(--chart-emerald)',
-    type: 'progress' as const,
-    keyInputs: [
-      'Capacity vs forecast attendance',
-      'Historical ops issues',
-      'Queue & movement simulations',
-      'Timing overlays',
-      'Speaking time and presentation time',
     ],
   },
   {
@@ -388,13 +360,31 @@ function KeyInputsTooltip({ inputs }: { inputs: string[] }) {
   );
 }
 
-export function PredictiveAnalyticsDashboard() {
+export function PredictiveAnalyticsDashboard(props?: {
+  /** When set, only these graph keys (registry) are shown. Omitted = show all. */
+  allowedGraphKeys?: ReadonlySet<string>;
+}) {
+  const { allowedGraphKeys } = props ?? {};
   const [openTooltip, setOpenTooltip] = useState<string | null>(null);
   const touchHandledRef = useRef(false);
 
+  const configs = allowedGraphKeys
+    ? chartConfigs.filter((c) => allowedGraphKeys.has(c.key))
+    : chartConfigs;
+
+  if (configs.length === 0) {
+    return (
+      <div className="flex w-full flex-1 min-h-0 flex-col items-center justify-center px-4 py-8">
+        <div className="w-full max-w-lg rounded-xl border border-[var(--border-secondary)] bg-[var(--background-card)] px-6 py-16 text-center text-sm text-[var(--foreground-muted)]">
+          No charts are enabled for this view.
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      {chartConfigs.map((config, index) => {
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {configs.map((config, index) => {
         const score = predictiveAnalyticsData[config.key as keyof typeof predictiveAnalyticsData];
         const isOpen = openTooltip === config.key;
         

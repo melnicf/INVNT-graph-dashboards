@@ -9,10 +9,8 @@ export const predictiveAnalyticsData: PredictiveAnalyticsData = {
   temporalFavorability: 82,
   locationSuitability: 91,
   contentAlignment: 68,
-  economicSentiment: 75,
   attendanceReliability: 72,
   networkDensity: 85,
-  operationalStrain: 94,
   brandStorytelling: 88,
 };
 

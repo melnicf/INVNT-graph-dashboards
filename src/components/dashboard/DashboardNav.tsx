@@ -1,78 +1,134 @@
 'use client';
 
-import { DashboardType, dashboardConfigs } from '@/types/dashboard';
+import Link from 'next/link';
+import Image from 'next/image';
+import { usePathname, useSearchParams } from 'next/navigation';
+import { signOut, useSession } from 'next-auth/react';
+import {
+  dashboardTabClass,
+  dashboardTabRailClass,
+  hrefPreservingReturn,
+  mainDashboardTabs,
+  resourceNavGroupClass,
+  resourceNavSegmentClass,
+  secondaryNavLinks,
+} from '@/lib/nav-config';
+import { useDashboardHomeHref } from '@/hooks/useDashboardHomeHref';
+import { AppNavShell } from './AppNavShell';
+import { NavLivePill } from './NavLivePill';
 
-interface DashboardNavProps {
-  activeDashboard: DashboardType;
-  onDashboardChange: (dashboard: DashboardType) => void;
+const brandLinkClass =
+  'group flex min-w-0 items-center gap-2.5 rounded-xl py-1 pl-1 pr-2 transition-[background,box-shadow] duration-200 hover:bg-[var(--background-card)]/55 hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06)] sm:gap-3 sm:pr-3';
+
+const brandImageClass =
+  'size-9 shrink-0 rounded-[10px] object-contain ring-1 ring-white/[0.08] transition-[ring-color] duration-200 group-hover:ring-[var(--accent-primary)]/30 sm:size-10';
+
+/** Placeholder bar while search params / session resolve (layout Suspense fallback). */
+export function DashboardNavSkeleton() {
+  return (
+    <header className="fixed inset-x-0 top-0 z-50 h-[9.75rem] w-full animate-pulse border-b border-[var(--border-secondary)] bg-[var(--background)]/60 backdrop-blur-md sm:h-[10.25rem]" />
+  );
 }
 
-export function DashboardNav({ activeDashboard, onDashboardChange }: DashboardNavProps) {
+export function DashboardNav() {
+  const { data: session } = useSession();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const brandHomeHref = useDashboardHomeHref();
+  const returnParam = searchParams.get('return');
+  const showDashboardTabs = pathname !== '/faq' && pathname !== '/process';
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-[var(--border-secondary)] bg-[var(--background)]/80 backdrop-blur-xl overflow-x-hidden">
-      <div className="container mx-auto px-4 sm:px-6 max-w-full">
-        {/* Live indicator - above navbar */}
-        <div className="flex justify-end pt-3 pb-1">
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-[10px] sm:text-xs text-[var(--foreground-muted)]">Live</span>
+    <AppNavShell
+      brand={
+        <Link href={brandHomeHref} className={brandLinkClass} title="Back to dashboards">
+          <Image
+            src="/invnt-logo.jpg"
+            alt="INVNT"
+            width={40}
+            height={40}
+            className={brandImageClass}
+          />
+          <div className="min-w-0">
+            <p className="truncate text-sm font-semibold tracking-tight text-[var(--foreground)] sm:text-[0.9375rem]">
+              INVNT
+            </p>
+            <p className="hidden text-[10px] font-medium uppercase tracking-[0.16em] text-[var(--foreground-muted)] sm:block">
+              Intelligence Engine
+            </p>
           </div>
-        </div>
-
-        {/* Navbar row */}
-        <div className="flex items-center justify-between gap-2 min-w-0 pb-4">
-          {/* Logo - hidden on mobile */}
-          <div className="hidden sm:flex items-center gap-2 sm:gap-3 min-w-0 flex-shrink-0">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-br from-[var(--accent-primary)] to-[var(--accent-secondary)] flex items-center justify-center flex-shrink-0">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="white"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="sm:w-[18px] sm:h-[18px]"
+        </Link>
+      }
+      resourceNav={
+        <nav aria-label="Resources" className={resourceNavGroupClass}>
+          {secondaryNavLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={hrefPreservingReturn(link.href, returnParam)}
+              className={resourceNavSegmentClass(pathname === link.href)}
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+      }
+      trailing={
+        <>
+          <NavLivePill />
+          {session?.user && showDashboardTabs && (
+            <div className="hidden items-center gap-0.5 rounded-full border border-[var(--border-primary)]/40 bg-[var(--background-card)]/70 py-1 pl-2.5 pr-1 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)] sm:flex">
+              <span className="max-w-[7.5rem] truncate px-1 text-xs font-medium text-[var(--foreground-secondary)]">
+                {session.user.name}
+              </span>
+              <button
+                type="button"
+                onClick={() => signOut({ callbackUrl: '/login' })}
+                className="flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium text-[var(--foreground-muted)] transition-colors hover:bg-[var(--background-tertiary)] hover:text-[var(--foreground)]"
               >
-                <path d="M3 3v18h18" />
-                <path d="m19 9-5 5-4-4-3 3" />
-              </svg>
-            </div>
-            <div className="min-w-0">
-              <h1 className="text-sm sm:text-base font-semibold text-[var(--foreground)] truncate">INVNT</h1>
-              <p className="text-[10px] text-[var(--foreground-muted)] hidden sm:block">Analytics</p>
-            </div>
-          </div>
-
-          {/* Dashboard Tabs - flex to fit on mobile */}
-          <nav className="flex items-center p-1 rounded-lg bg-[var(--background-card)] border border-[var(--border-secondary)] flex-1 min-w-0 justify-center max-w-full sm:max-w-none sm:flex-initial sm:absolute sm:left-1/2 sm:-translate-x-1/2">
-            <div className="flex items-center w-full sm:w-auto min-w-0">
-              {dashboardConfigs.map((config) => (
-                <button
-                  key={config.id}
-                  onClick={() => onDashboardChange(config.id)}
-                  className={`
-                    relative flex-1 min-w-0 sm:flex-initial sm:w-36 py-2 px-2 sm:px-0 rounded-md text-xs sm:text-sm font-medium text-center truncate
-                    transition-all duration-200 ease-out
-                    ${
-                      activeDashboard === config.id
-                        ? 'bg-[var(--accent-primary)] text-white shadow-lg shadow-[var(--accent-primary)]/25'
-                        : 'text-[var(--foreground-muted)] hover:text-[var(--foreground)]'
-                    }
-                  `}
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="opacity-80"
+                  aria-hidden
                 >
-                  <span className="hidden sm:inline">{config.name}</span>
-                  <span className="inline sm:hidden">{config.shortName}</span>
-                </button>
-              ))}
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+                <span className="hidden sm:inline">Sign out</span>
+              </button>
             </div>
+          )}
+        </>
+      }
+      tabs={
+        showDashboardTabs ? (
+          <nav className={dashboardTabRailClass} aria-label="Dashboard views">
+            {mainDashboardTabs.map((tab) => {
+              const isActive = pathname === tab.href;
+              return (
+                <Link
+                  key={tab.href}
+                  href={hrefPreservingReturn(tab.href, returnParam)}
+                  className={dashboardTabClass(isActive)}
+                >
+                  <span className="hidden sm:inline">{tab.name}</span>
+                  <span className="inline sm:hidden">{tab.shortName}</span>
+                  {'badge' in tab && tab.badge && (
+                    <span className="ml-1 align-middle text-[9px] font-normal opacity-65">({tab.badge})</span>
+                  )}
+                </Link>
+              );
+            })}
           </nav>
-
-          {/* Spacer for desktop layout when tabs are absolutely centered */}
-          <div className="hidden sm:block w-24 flex-shrink-0" />
-        </div>
-      </div>
-    </header>
+        ) : null
+      }
+    />
   );
 }

@@ -431,12 +431,44 @@ function MetricCards({ data }: { data: { time: string; value: number }[] }) {
   );
 }
 
-export function ProductionDashboard() {
+const PRODUCTION_CHART_KEYS = [
+  'dwellTime',
+  'dwellBySeniority',
+  'dwellByZone',
+  'attendeesOnSite',
+  'interestByZone',
+  'interestByContent',
+  'audioSentiment',
+  'presenterTime',
+] as const;
+
+export function ProductionDashboard(props?: {
+  allowedGraphKeys?: ReadonlySet<string>;
+}) {
+  const { allowedGraphKeys } = props ?? {};
   const data = productionDashboardData;
+
+  const show = (key: (typeof PRODUCTION_CHART_KEYS)[number]) =>
+    !allowedGraphKeys || allowedGraphKeys.has(key);
+
+  const anyChart =
+    !allowedGraphKeys ||
+    PRODUCTION_CHART_KEYS.some((k) => allowedGraphKeys.has(k));
+
+  if (allowedGraphKeys && !anyChart) {
+    return (
+      <div className="flex w-full flex-1 min-h-0 flex-col items-center justify-center px-4 py-8">
+        <div className="w-full max-w-lg rounded-xl border border-[var(--border-secondary)] bg-[var(--background-card)] px-6 py-16 text-center text-sm text-[var(--foreground-muted)]">
+          No charts are enabled for this view.
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       {/* 1. Dwell Time - Sparkline */}
+      {show('dwellTime') && (
       <ChartCard
         title="Dwell Time"
         subtitle="Measured in seconds"
@@ -446,8 +478,10 @@ export function ProductionDashboard() {
           <SparklineChart data={data.dwellTimeSeconds} color="var(--chart-purple)" />
         </div>
       </ChartCard>
+      )}
 
       {/* 2. Dwell by Seniority - Horizontal Bars */}
+      {show('dwellBySeniority') && (
       <ChartCard
         title="Dwell by Seniority"
         subtitle="Average time per level"
@@ -463,8 +497,10 @@ export function ProductionDashboard() {
           unit="s"
         />
       </ChartCard>
+      )}
 
       {/* 3. Dwell by Zone - Vertical Bars */}
+      {show('dwellByZone') && (
       <ChartCard
         title="Dwell by Zone"
         subtitle="Time across zones"
@@ -481,8 +517,10 @@ export function ProductionDashboard() {
           />
         </div>
       </ChartCard>
+      )}
 
       {/* 4. Attendees on Site - Metric Cards */}
+      {show('attendeesOnSite') && (
       <ChartCard
         title="Attendees on Site"
         subtitle="Daily attendance"
@@ -493,8 +531,10 @@ export function ProductionDashboard() {
           <MetricCards data={data.attendeesOnSite} />
         </div>
       </ChartCard>
+      )}
 
       {/* 5. Declared Interest × Zone - Horizontal Bars */}
+      {show('interestByZone') && (
       <ChartCard
         title="Interest × Zone"
         subtitle="Minutes per zone"
@@ -509,8 +549,10 @@ export function ProductionDashboard() {
           }))}
         />
       </ChartCard>
+      )}
 
       {/* 6. Declared Interest × Content - Vertical Bars */}
+      {show('interestByContent') && (
       <ChartCard
         title="Interest × Content"
         subtitle="By category"
@@ -527,8 +569,10 @@ export function ProductionDashboard() {
           />
         </div>
       </ChartCard>
+      )}
 
       {/* 7. Audio × Sentiment - Donut */}
+      {show('audioSentiment') && (
       <ChartCard
         title="Audio × Sentiment"
         subtitle="Real-time analysis"
@@ -539,8 +583,10 @@ export function ProductionDashboard() {
           <DonutChart data={data.audioSentiment} />
         </div>
       </ChartCard>
+      )}
 
       {/* 8. Presenter × Time - Horizontal Bars */}
+      {show('presenterTime') && (
       <ChartCard
         title="Presenter × Time"
         subtitle="Session duration"
@@ -556,6 +602,7 @@ export function ProductionDashboard() {
           unit=" min"
         />
       </ChartCard>
+      )}
     </div>
   );
 }

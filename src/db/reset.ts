@@ -1,8 +1,7 @@
-import { config } from 'dotenv';
 import { Client } from 'pg';
+import { loadDbEnv } from './load-env';
 
-config();
-config({ path: '.env.local', override: true });
+loadDbEnv();
 
 async function reset() {
   const url = process.env.DATABASE_URL;

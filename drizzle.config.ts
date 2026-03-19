@@ -1,9 +1,7 @@
-import { config } from 'dotenv';
 import { defineConfig } from 'drizzle-kit';
+import { loadDbEnv } from './src/db/load-env';
 
-// Drizzle Kit CLI does not load `.env.local` (Next.js does). Match Next.js precedence.
-config();
-config({ path: '.env.local', override: true });
+loadDbEnv();
 
 export default defineConfig({
   schema: './src/db/schema.ts',

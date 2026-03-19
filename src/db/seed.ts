@@ -1,7 +1,6 @@
-import { config } from 'dotenv';
+import { loadDbEnv } from './load-env';
 
-config();
-config({ path: '.env.local', override: true });
+loadDbEnv();
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { hash } from 'bcryptjs';
 import * as schema from './schema';

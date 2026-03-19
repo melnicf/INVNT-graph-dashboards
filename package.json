@@ -12,7 +12,12 @@
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
     "db:seed": "npx tsx src/db/seed.ts",
-    "db:reset": "npx tsx src/db/reset.ts && drizzle-kit push && npx tsx src/db/seed.ts"
+    "db:reset": "npx tsx src/db/reset.ts && drizzle-kit push && npx tsx src/db/seed.ts",
+    "db:push:prod": "cross-env LOAD_ENV_PROD=1 drizzle-kit push",
+    "db:migrate:prod": "cross-env LOAD_ENV_PROD=1 drizzle-kit migrate",
+    "db:studio:prod": "cross-env LOAD_ENV_PROD=1 drizzle-kit studio",
+    "db:seed:prod": "cross-env LOAD_ENV_PROD=1 npx tsx src/db/seed.ts",
+    "db:reset:prod": "cross-env LOAD_ENV_PROD=1 npx tsx src/db/reset.ts && cross-env LOAD_ENV_PROD=1 drizzle-kit push && cross-env LOAD_ENV_PROD=1 npx tsx src/db/seed.ts"
   },
   "dependencies": {
     "@radix-ui/react-tooltip": "^1.2.8",
@@ -36,6 +41,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "1.0.0",
+    "cross-env": "^7.0.3",
     "drizzle-kit": "^0.31.10",
     "eslint": "^9",
     "eslint-config-next": "16.1.1",

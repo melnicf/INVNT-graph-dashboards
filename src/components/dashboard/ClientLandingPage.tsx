@@ -190,9 +190,6 @@ export function ClientLandingPage({
                 >
                   <span className="hidden sm:inline">{tab.name}</span>
                   <span className="inline sm:hidden">{tab.shortName}</span>
-                  {'badge' in tab && tab.badge && (
-                    <span className="ml-1 align-middle text-[9px] font-normal opacity-65">({tab.badge})</span>
-                  )}
                 </button>
               );
             })}

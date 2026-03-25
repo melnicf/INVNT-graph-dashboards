@@ -46,7 +46,7 @@ export interface ProductionDashboardData {
   presenterTime: TimeSeriesData[];
 }
 
-// Client View Dashboard Charts
+// Post Insights dashboard charts
 export interface ClientViewData {
   dwellTimeHours: number;
   dwellBySeniority: SeniorityData[];
@@ -85,6 +85,5 @@ export const dashboardConfigs: DashboardConfig[] = [
     shortName: 'Post Insights',
     description: 'Mobile-optimized client metrics',
     chartCount: 5,
-    badge: 'coming',
   },
 ];

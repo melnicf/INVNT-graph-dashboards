@@ -3,7 +3,7 @@ import { safeDashboardReturnPath } from '@/lib/safe-return-path';
 /** Shared labels and routes for main product navigation (dashboard layout + client portal). */
 
 export const secondaryNavLinks = [
-  { href: '/process', label: 'Process' },
+  { href: '/process', label: 'Platform architecture' },
   { href: '/faq', label: 'FAQ' },
 ] as const;
 
@@ -24,7 +24,7 @@ export function hrefPreservingReturn(path: string, returnFromSearch: string | nu
 
 /** Process / FAQ inside the segmented control on the top bar. */
 export function resourceNavSegmentClass(active: boolean): string {
-  return `inline-flex min-h-10 min-w-[4.75rem] shrink-0 items-center justify-center rounded-lg px-4 text-sm font-medium transition-all duration-200 ${
+  return `inline-flex min-h-10 min-w-0 shrink-0 items-center justify-center whitespace-nowrap rounded-lg px-3.5 text-sm font-medium transition-all duration-200 sm:px-4 ${
     active
       ? 'bg-[var(--background-card)] text-[var(--foreground)] shadow-[0_1px_3px_rgba(0,0,0,0.35),inset_0_1px_0_0_rgba(255,255,255,0.06)] ring-1 ring-white/[0.06]'
       : 'text-[var(--foreground-muted)] hover:bg-[var(--background-card)]/50 hover:text-[var(--foreground-secondary)]'
@@ -64,7 +64,6 @@ export const mainDashboardTabs = [
     href: '/post-insights',
     name: 'Post Insights',
     shortName: 'Post Insights',
-    badge: 'coming' as const,
   },
 ] as const;
 

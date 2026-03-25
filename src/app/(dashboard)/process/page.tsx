@@ -89,7 +89,7 @@ export default function ProcessPage() {
             INVNT Event Intelligence Engine
           </p>
           <h1 className="text-3xl sm:text-4xl font-bold text-[var(--foreground)] mb-4">
-            Process Behind the Data
+            Platform architecture
           </h1>
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--border-accent)] bg-[var(--background-card)]">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--chart-emerald)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

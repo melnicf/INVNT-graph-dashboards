@@ -4,6 +4,7 @@ import { db } from '@/db';
 import { clients, clientGraphs, dashboards, graphs } from '@/db/schema';
 import { eq, and } from 'drizzle-orm';
 import { mainDashboardTabs } from '@/lib/nav-config';
+import { dashboardDisplayName } from '@/lib/dashboard-display';
 
 export async function getClientPortalData(clientId: string) {
   const [client] = await db
@@ -14,13 +15,18 @@ export async function getClientPortalData(clientId: string) {
 
   if (!client) return null;
 
-  const allDashboardRows = await db
+  const rawDashboards = await db
     .select({
       key: dashboards.key,
       name: dashboards.name,
       description: dashboards.description,
     })
     .from(dashboards);
+
+  const allDashboardRows = rawDashboards.map((d) => ({
+    ...d,
+    name: dashboardDisplayName(d.key, d.name),
+  }));
 
   const tabIndex = new Map<string, number>(
     mainDashboardTabs.map((t, i) => [t.key, i]),

@@ -5,6 +5,7 @@ import { dashboards, graphs, clientGraphs } from '@/db/schema';
 import { eq, and } from 'drizzle-orm';
 import { auth } from '@/auth';
 import { revalidatePath } from 'next/cache';
+import { dashboardDisplayName } from '@/lib/dashboard-display';
 
 async function requireAdmin() {
   const session = await auth();
@@ -45,7 +46,11 @@ async function upsertClientGraphEnabled(
 }
 
 export async function getDashboards() {
-  return db.select().from(dashboards).orderBy(dashboards.key);
+  const rows = await db.select().from(dashboards).orderBy(dashboards.key);
+  return rows.map((d) => ({
+    ...d,
+    name: dashboardDisplayName(d.key, d.name),
+  }));
 }
 
 export async function getGraphs() {

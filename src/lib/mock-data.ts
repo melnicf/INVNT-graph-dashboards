@@ -73,7 +73,7 @@ export const productionDashboardData: ProductionDashboardData = {
   ],
 };
 
-// Sample Client View Data (in thousands for dwell times in hours)
+// Sample Post Insights data (in thousands for dwell times in hours)
 export const clientViewData: ClientViewData = {
   dwellTimeHours: 240, // 240K hours (converted from 14.4M minutes)
   dwellBySeniority: [

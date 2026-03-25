@@ -39,7 +39,7 @@ async function seed() {
     },
     {
       key: 'client',
-      name: 'Client View',
+      name: 'Post Insights',
       description: 'Mobile-optimized client metrics',
     },
   ];
@@ -48,7 +48,13 @@ async function seed() {
     await db
       .insert(schema.dashboards)
       .values(d)
-      .onConflictDoNothing({ target: schema.dashboards.key });
+      .onConflictDoUpdate({
+        target: schema.dashboards.key,
+        set: {
+          name: d.name,
+          description: d.description,
+        },
+      });
   }
 
   console.log('  ✓ Dashboards registered');
@@ -75,7 +81,7 @@ async function seed() {
     { key: 'audioSentiment', name: 'Audio × Sentiment', dashboardKey: 'production', component: 'ProductionDashboard' },
     { key: 'presenterTime', name: 'Presenter × Time', dashboardKey: 'production', component: 'ProductionDashboard' },
 
-    // Post Insights / Client View (semantic graph keys → dashboard sections)
+    // Post Insights (semantic graph keys → dashboard sections)
     { key: 'postSentiment', name: 'Sentiment Analysis', dashboardKey: 'client', component: 'ClientViewDashboard' },
     { key: 'postSurvey', name: 'Survey Analysis', dashboardKey: 'client', component: 'ClientViewDashboard' },
     { key: 'postAttendance', name: 'Attendance Analysis', dashboardKey: 'client', component: 'ClientViewDashboard' },

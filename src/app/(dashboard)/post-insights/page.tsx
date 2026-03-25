@@ -11,7 +11,6 @@ export default function PostInsightsPage() {
           shortName: 'Post Insights',
           description: 'Post-event analysis and insights',
           chartCount: 6,
-          badge: 'coming',
         }}
       />
       <div className="flex flex-1 flex-col min-h-0 animate-fade-in">
